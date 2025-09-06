@@ -1,4 +1,3 @@
-# app.py
 
 import os
 import joblib
@@ -9,7 +8,6 @@ from flask import Flask, request, jsonify
 # Inicializa a aplicação Flask
 app = Flask(__name__)
 
-# --- Carregamento dos Modelos ---
 # Carrega o modelo e o scaler UMA VEZ quando a aplicação inicia.
 models_dir = 'models'
 model_path = os.path.join(models_dir, 'emotion_model.pkl')
@@ -24,7 +22,6 @@ except Exception as e:
     model = None
     scaler = None
 
-# --- Função de Extração de Características ---
 # Esta é a MESMA função que usamos no script de extração.
 def extract_features(file):
     try:
