@@ -1,0 +1,19 @@
+# Arquivos de Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ambientes Virtuais (boa prática)
+venv/
+env/
+.venv/
+
+# Arquivos de Sistema Operacional
+.DS_Store
+
+# ARQUIVOS GERADOS E DADOS GRANDES (MUITO IMPORTANTE)
+# Não queremos enviar 7GB de áudios para o GitHub!
+data/RAVDESS/
+data/audio_features.csv
+*.png

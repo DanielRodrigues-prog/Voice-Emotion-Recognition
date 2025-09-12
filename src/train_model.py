@@ -1,68 +1,81 @@
-# src/train_model.py
-
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV # <-- Adicionado GridSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-import joblib # Usado para salvar o modelo
+from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
+import joblib
+import os
+import matplotlib.pyplot as plt
 
 # 1. Carregar os dados
 print("Carregando o dataset de características...")
-df = pd.read_csv(r'C:\Users\rodridae\Desktop\Projeto SOM python\data\audio_features.csv')
-
-# Verifica as primeiras linhas e informações do dataframe
-print("Primeiras 5 linhas do dataset:")
-print(df.head())
-print("\nInformações do DataFrame:")
-df.info()
+# Usando o caminho do seu último erro para garantir consistência
+df = pd.read_csv(r'C:\Users\rodridae\Desktop\Projeto SOM python\Projeto-Som-Python\data\audio_features.csv')
 
 # 2. Preparar os dados para o treinamento
-# X contém as características (features), y contém os rótulos (labels)
 X = df.drop('emotion', axis=1)
 y = df['emotion']
 
-# 3. Dividir os dados em conjuntos de treinamento e teste
-# 80% para treino, 20% para teste
-# random_state garante que a divisão seja a mesma toda vez que rodarmos
+# 3. Dividir os dados
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-print(f"\nFormato dos dados de treino: {X_train.shape}")
-print(f"Formato dos dados de teste: {X_test.shape}")
-
-# 4. Normalização dos dados (Feature Scaling)
-# É crucial para que características com valores maiores não dominem o modelo.
-# Usamos o StandardScaler para isso.
+# 4. Normalização dos dados
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test) # Importante: usamos o mesmo scaler treinado nos dados de treino
+X_test_scaled = scaler.transform(X_test)
 
-# 5. Treinar o modelo de Machine Learning
-# Usaremos o RandomForestClassifier, que é um modelo robusto e bom para começar.
-print("\nTreinando o modelo RandomForestClassifier...")
-model = RandomForestClassifier(n_estimators=200, random_state=42)
-model.fit(X_train_scaled, y_train)
-print("Treinamento concluído!")
+# --- INÍCIO DA GRANDE MUDANÇA: OTIMIZAÇÃO DE HIPERPARÂMETROS ---
 
-# 6. Avaliar o modelo
-# Fazer previsões no conjunto de teste
-y_pred = model.predict(X_test_scaled)
+# 5. Definir o "grid" de parâmetros para testar
+# Este é um grid pequeno para não demorar uma eternidade. Em projetos reais, ele pode ser maior.
+param_grid = {
+    'n_estimators': [200, 300],          # Número de árvores
+    'max_depth': [15, 25, None],         # Profundidade máxima
+    'min_samples_leaf': [1, 2],          # Mínimo de amostras por folha
+    'criterion': ['gini', 'entropy']     # Critério de divisão
+}
 
-# Calcular a acurácia
+# 6. Criar o modelo base e o objeto GridSearchCV
+# n_jobs=-1 usa todos os núcleos do seu processador para acelerar o processo
+# cv=3 faz uma validação cruzada com 3 "folds" (dobras)
+# verbose=2 mostra o progresso do treinamento no terminal
+print("\nIniciando a otimização de hiperparâmetros com GridSearchCV...")
+rf = RandomForestClassifier(random_state=42)
+grid_search = GridSearchCV(estimator=rf, param_grid=param_grid, cv=3, n_jobs=-1, verbose=2)
+
+# 7. Treinar o GridSearchCV (aqui é onde a mágica demorada acontece)
+grid_search.fit(X_train_scaled, y_train)
+
+# 8. Pegar o melhor modelo encontrado pelo GridSearch
+print("\nOtimização concluída!")
+print("Melhores parâmetros encontrados:")
+print(grid_search.best_params_)
+best_model = grid_search.best_estimator_
+
+# --- FIM DA GRANDE MUDANÇA ---
+
+# 9. Avaliar o MELHOR modelo encontrado
+y_pred = best_model.predict(X_test_scaled)
 accuracy = accuracy_score(y_test, y_pred)
-print(f"\nAcurácia do modelo no conjunto de teste: {accuracy * 100:.2f}%")
+print(f"\nAcurácia do MELHOR modelo no conjunto de teste: {accuracy * 100:.2f}%")
 
-# 7. Salvar o modelo e o scaler
-# Salvar o modelo treinado e o scaler para que possamos usá-los depois na nossa API.
-model_path = '../models/emotion_model.pkl'
-scaler_path = '../models/scaler.pkl'
+# 10. Gerar a Matriz de Confusão para o MELHOR modelo
+print("\nGerando a Matriz de Confusão para o melhor modelo...")
+labels = sorted(y_test.unique())
+cm = confusion_matrix(y_test, y_pred, labels=labels)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+fig, ax = plt.subplots(figsize=(10, 10))
+disp.plot(ax=ax, cmap=plt.cm.Blues, xticks_rotation='vertical')
+plt.title('Matriz de Confusão (Modelo Otimizado)')
+output_path = '../confusion_matrix_optimized.png' # Novo nome para não sobrescrever a antiga
+plt.savefig(output_path)
+print(f"Matriz de Confusão otimizada salva em: {output_path}")
 
-# Criar a pasta 'models' se ela não existir
-import os
-os.makedirs('../models', exist_ok=True)
-
-joblib.dump(model, model_path)
+# 11. Salvar o MELHOR modelo e o scaler
+model_path = '../models/emotion_model_optimized.pkl' # Novo nome
+scaler_path = '../models/scaler.pkl' # Scaler continua o mesmo
+os.makedirs(os.path.dirname(model_path), exist_ok=True)
+joblib.dump(best_model, model_path)
 joblib.dump(scaler, scaler_path)
-
-print(f"\nModelo salvo em: {model_path}")
+print(f"\nMelhor modelo salvo em: {model_path}")
 print(f"Scaler salvo em: {scaler_path}")
