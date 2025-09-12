@@ -19,8 +19,8 @@ Este projeto é uma aplicação web completa que utiliza Machine Learning para a
 
 1.  **Clone o Repositório**
     ```bash
-    git clone [https://github.com/seu-usuario-aqui/nome-do-repositorio-aqui.git](https://github.com/seu-usuario-aqui/nome-do-repositorio-aqui.git)
-    cd nome-do-repositorio-aqui
+    git clone [[https://github.com/DanielRodrigues-prog/Projeto-Som-Python.git]](https://github.com/seu-usuario-aqui/nome-do-repositorio-aqui.git)
+    cd Projeto-Som-Python
     ```
 
 2.  **Baixe o Dataset**
