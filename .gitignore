@@ -14,6 +14,6 @@ env/
 
 # ARQUIVOS GERADOS E DADOS GRANDES (MUITO IMPORTANTE)
 # Não queremos enviar 7GB de áudios para o GitHub!
-data/RAVDESS/
+data/
 data/audio_features.csv
 *.png
