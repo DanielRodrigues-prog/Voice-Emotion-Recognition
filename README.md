@@ -45,7 +45,7 @@ Este projeto é uma aplicação web completa que utiliza Machine Learning para a
     ```bash
     python app.py
     ```
-6.  Abra seu navegador e acesse `http://12g.0.0.1:5000`.
+6.  Abra seu navegador e acesse `http://127.0.0.1:5000`.
 
 ## ✍️ Autor
 
