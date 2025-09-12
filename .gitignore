@@ -4,7 +4,7 @@ __pycache__/
 *.pyo
 *.pyd
 
-# Ambientes Virtuais (boa prática)
+# Ambientes Virtuais 
 venv/
 env/
 .venv/
@@ -12,8 +12,7 @@ env/
 # Arquivos de Sistema Operacional
 .DS_Store
 
-# ARQUIVOS GERADOS E DADOS GRANDES (MUITO IMPORTANTE)
-# Não queremos enviar 7GB de áudios para o GitHub!
+# ARQUIVOS GERADOS E DADOS GRANDES 
 data/
 data/audio_features.csv
 *.png
