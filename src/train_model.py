@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 
 # 1. Carregar os dados
 print("Carregando o dataset de características...")
-# Usando o caminho do seu último erro para garantir consistência
 df = pd.read_csv(r'C:\Users\rodridae\Desktop\Projeto SOM python\Projeto-Som-Python\data\audio_features.csv')
 
 # 2. Preparar os dados para o treinamento
@@ -24,10 +23,7 @@ scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
-# --- INÍCIO DA GRANDE MUDANÇA: OTIMIZAÇÃO DE HIPERPARÂMETROS ---
-
 # 5. Definir o "grid" de parâmetros para testar
-# Este é um grid pequeno para não demorar uma eternidade. Em projetos reais, ele pode ser maior.
 param_grid = {
     'n_estimators': [200, 300],          # Número de árvores
     'max_depth': [15, 25, None],         # Profundidade máxima
@@ -43,7 +39,7 @@ print("\nIniciando a otimização de hiperparâmetros com GridSearchCV...")
 rf = RandomForestClassifier(random_state=42)
 grid_search = GridSearchCV(estimator=rf, param_grid=param_grid, cv=3, n_jobs=-1, verbose=2)
 
-# 7. Treinar o GridSearchCV (aqui é onde a mágica demorada acontece)
+# 7. Treinar o GridSearchCV
 grid_search.fit(X_train_scaled, y_train)
 
 # 8. Pegar o melhor modelo encontrado pelo GridSearch
@@ -52,12 +48,10 @@ print("Melhores parâmetros encontrados:")
 print(grid_search.best_params_)
 best_model = grid_search.best_estimator_
 
-# --- FIM DA GRANDE MUDANÇA ---
-
-# 9. Avaliar o MELHOR modelo encontrado
+# 9. Avaliar o modelo encontrado
 y_pred = best_model.predict(X_test_scaled)
 accuracy = accuracy_score(y_test, y_pred)
-print(f"\nAcurácia do MELHOR modelo no conjunto de teste: {accuracy * 100:.2f}%")
+print(f"\nAcurácia do modelo no conjunto de teste: {accuracy * 100:.2f}%")
 
 # 10. Gerar a Matriz de Confusão para o MELHOR modelo
 print("\nGerando a Matriz de Confusão para o melhor modelo...")
@@ -67,13 +61,13 @@ disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
 fig, ax = plt.subplots(figsize=(10, 10))
 disp.plot(ax=ax, cmap=plt.cm.Blues, xticks_rotation='vertical')
 plt.title('Matriz de Confusão (Modelo Otimizado)')
-output_path = '../confusion_matrix_optimized.png' # Novo nome para não sobrescrever a antiga
+output_path = '../confusion_matrix_optimized.png'
 plt.savefig(output_path)
 print(f"Matriz de Confusão otimizada salva em: {output_path}")
 
 # 11. Salvar o MELHOR modelo e o scaler
-model_path = '../models/emotion_model_optimized.pkl' # Novo nome
-scaler_path = '../models/scaler.pkl' # Scaler continua o mesmo
+model_path = '../models/emotion_model_optimized.pkl' 
+scaler_path = '../models/scaler.pkl' # 
 os.makedirs(os.path.dirname(model_path), exist_ok=True)
 joblib.dump(best_model, model_path)
 joblib.dump(scaler, scaler_path)

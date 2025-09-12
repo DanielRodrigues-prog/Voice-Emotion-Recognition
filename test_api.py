@@ -7,7 +7,7 @@ API_URL = 'http://127.0.0.1:5000/predict'
 
 # Caminho para um arquivo de áudio que você quer testar
 
-TEST_AUDIO_PATH = os.path.join('data', 'Actor_01', 'WhatsApp Ptt 2025-09-04 at 19.41.34.ogg')
+TEST_AUDIO_PATH = os.path.join()
 
 def test_prediction():
     print(f"Enviando o arquivo: {TEST_AUDIO_PATH}")

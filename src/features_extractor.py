@@ -1,11 +1,9 @@
-# src/features_extractor.py
-
 import librosa
 import numpy as np
 import pandas as pd
 import os
 
-# Mapa de emoções (sem mudanças)
+# Mapa de emoções 
 emotion_map = {
     '01': 'neutral',
     '02': 'calm',
@@ -17,8 +15,8 @@ emotion_map = {
     '08': 'surprised'
 }
 
-# --- ATENÇÃO: Verifique se este caminho está correto para sua estrutura de pastas ---
-DATASET_PATH = r'C:\Users\rodridae\Desktop\Projeto SOM python\Projeto-Som-Python\data'
+#ATENÇÃO: Verifique se este caminho está correto para sua estrutura de pastas ---
+DATASET_PATH = r''
 
 
 def extract_features(file_path):
@@ -39,13 +37,11 @@ def extract_features(file_path):
         mel = np.mean(librosa.feature.melspectrogram(y=audio, sr=sample_rate).T, axis=0)
         rms = np.mean(librosa.feature.rms(y=audio).T, axis=0)
         
-        # --- NOVA CARACTERÍSTICA ---
         # Extrai a estimativa de Tempo (BPM)
         # librosa.beat.tempo retorna um array, então pegamos o primeiro elemento [0]
         tempo = librosa.beat.tempo(y=audio, sr=sample_rate)[0]
         # -------------------------
 
-        # --- ATUALIZADO ---
         # Concatena TODAS as características. Precisamos colocar 'tempo' em uma lista para concatenar.
         features = np.concatenate((mfccs, chroma, mel, rms, [tempo]))
         # ------------------
@@ -55,7 +51,6 @@ def extract_features(file_path):
         print(f"Erro ao processar {file_path}: {e}")
         return None
 
-# Nenhuma mudança no resto do arquivo
 def create_features_dataframe():
     features_list = []
     
@@ -84,7 +79,7 @@ if __name__ == '__main__':
     final_df = pd.concat([expanded_features, features_df['emotion']], axis=1)
     
     # --- ATENÇÃO: Verifique se este caminho está correto para sua estrutura de pastas ---
-    output_path = r'C:\Users\rodridae\Desktop\Projeto SOM python\Projeto-Som-Python\data\audio_features.csv'
+    output_path = r''
     final_df.to_csv(output_path, index=False)
     
     print(f"Extração concluída! Arquivo salvo em: {output_path}")
