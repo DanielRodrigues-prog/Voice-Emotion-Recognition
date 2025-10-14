@@ -1,5 +1,5 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split, GridSearchCV # <-- Adicionado GridSearchCV
+from sklearn.model_selection import train_test_split, GridSearchCV 
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 # 1. Carregar os dados
 print("Carregando o dataset de características...")
-df = pd.read_csv(r'C:\Users\rodridae\Desktop\Projeto SOM python\Projeto-Som-Python\data\audio_features.csv')
+df = pd.read_csv(r'')
 
 # 2. Preparar os dados para o treinamento
 X = df.drop('emotion', axis=1)
