@@ -1,21 +1,21 @@
-# 🎙️ Detector de Emoções em Áudio
+# Detector de Emoções em Áudio
 
 Este projeto é uma aplicação web completa que utiliza Machine Learning para analisar um arquivo de áudio e detectar a emoção expressa na voz do interlocutor. A análise é feita inteiramente com base nas características acústicas da voz, sem depender da transcrição do texto.
 
-## ✨ Funcionalidades
+## Funcionalidades
 
 - **Interface Web:** Permite o upload de arquivos de áudio (`.wav`, `.mp3`) para análise.
 - **Análise por IA:** Extração de múltiplas características acústicas (MFCCs, Energia-RMS, Tempo, etc.).
 - **Modelo Otimizado:** Um modelo `RandomForestClassifier` com hiperparâmetros ajustados via `GridSearchCV` prevê uma das 8 emoções.
 - **API RESTful:** O modelo é servido através de uma API construída com Flask, pronta para ser consumida.
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 - **Back-end:** Python, Flask
 - **Machine Learning:** Scikit-learn, Librosa, Pandas, Numpy
 - **Front-end:** HTML, CSS, JavaScript
 
-## 🚀 Como Executar
+## Como Executar
 
 1.  **Clone o Repositório**
     ```bash
@@ -47,7 +47,7 @@ Este projeto é uma aplicação web completa que utiliza Machine Learning para a
     ```
 6.  Abra seu navegador e acesse `http://127.0.0.1:5000`.
 
-## ✍️ Autor
+## Autor
 
 * **Daniel Rodrigues**
 * **LinkedIn:** (https://www.linkedin.com/in/daniel-rodrigues-10305b239/)
